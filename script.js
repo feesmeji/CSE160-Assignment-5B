@@ -1,106 +1,167 @@
-console.log('Script is running!');
-
 import * as THREE from 'three';
-import {OBJLoader} from 'three/addons/loaders/OBJLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 function main() {
 
 	const canvas = document.querySelector( '#c' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
 
-//Camera setup
-	const fov = 125;
-	const aspect = 1; // the canvas default  x, width/height
-	const near = 0.1;  //y 
-	const far = 5;
+	const fov = 45;
+	const aspect = 2; // the canvas default
+	const near = 0.1;
+	const far = 100;
 	const camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-	camera.position.z = 2;
+	camera.position.set( 0, 10, 20 );
 
-//Make a scene
+	class MinMaxGUIHelper {
+
+		constructor( obj, minProp, maxProp, minDif ) {
+
+			this.obj = obj;
+			this.minProp = minProp;
+			this.maxProp = maxProp;
+			this.minDif = minDif;
+
+		}
+		get min() {
+
+			return this.obj[ this.minProp ];
+
+		}
+		set min( v ) {
+
+			this.obj[ this.minProp ] = v;
+			this.obj[ this.maxProp ] = Math.max( this.obj[ this.maxProp ], v + this.minDif );
+
+		}
+		get max() {
+
+			return this.obj[ this.maxProp ];
+
+		}
+		set max( v ) {
+
+			this.obj[ this.maxProp ] = v;
+			this.min = this.min; // this will call the min setter
+
+		}
+
+	}
+
+	function updateCamera() {
+
+		camera.updateProjectionMatrix();
+
+	}
+
+	const gui = new GUI();
+	gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
+	const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
+	gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'near' ).onChange( updateCamera );
+	gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
+
+	const controls = new OrbitControls( camera, canvas );
+	controls.target.set( 0, 5, 0 );
+	controls.update();
+
 	const scene = new THREE.Scene();
+	scene.background = new THREE.Color( 'black' );
 
-// add lighting
-{
-	const color = 0xFFFFFF;
-	const intensity = 3;
-	const light = new THREE.DirectionalLight(color, intensity);
-	light.position.set(-1, 2, 4);
-	scene.add(light);
-}
-// stuff for cube
-	const boxWidth = 1;
-	const boxHeight = 1;
-	const boxDepth = 1;
-	const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
+	{
 
-	const loader = new THREE.TextureLoader();
-	const texture = loader.load( 'rubber_duck.jpg');
-	texture.colorSpace = THREE.SRGBColorSpace;
+		const planeSize = 40;
 
-	const material = new THREE.MeshPhongMaterial( { map: texture} ); // greenish blue hex number
-	const cube = new THREE.Mesh( geometry, material );
-	//cube.visible = false
-	scene.add( cube );
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load( 'checker.png' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.magFilter = THREE.NearestFilter;
+		//texture.colorSpace = THREE.SRGBColorSpace;
+		const repeats = planeSize / 2;
+		texture.repeat.set( repeats, repeats );
 
+		const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
+		const planeMat = new THREE.MeshPhongMaterial( {
+			map: texture,
+			side: THREE.DoubleSide,
+		} );
+		const mesh = new THREE.Mesh( planeGeo, planeMat );
+		mesh.rotation.x = Math.PI * - .5;
+		scene.add( mesh );
 
-// stuff for sphere
-const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
-const sphere_material = new THREE.MeshPhongMaterial( { color: 0xff0000 } ); 
-const sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+	}
 
-sphere.position.set(-1.7,0,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+	{
 
-scene.add( sphere );
+		const cubeSize = 4;
+		const cubeGeo = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
+		const cubeMat = new THREE.MeshPhongMaterial( { color: '#8AC' } );
+		const mesh = new THREE.Mesh( cubeGeo, cubeMat );
+		mesh.position.set( cubeSize + 1, cubeSize / 2, 0 );
+		scene.add( mesh );
 
-//stuff for tetrahedron
-const tetrahedron_geometry = new THREE.TetrahedronGeometry(0.8, 0);
-const tetrahedron_material = new THREE.MeshPhongMaterial({color : 0x00FFFF });
-const tetrahedron = new THREE.Mesh(tetrahedron_geometry, tetrahedron_material);
+	}
 
-tetrahedron.position.set(1.7, 0 ,0);
+	{
 
-scene.add(tetrahedron);
+		const sphereRadius = 3;
+		const sphereWidthDivisions = 32;
+		const sphereHeightDivisions = 16;
+		const sphereGeo = new THREE.SphereGeometry( sphereRadius, sphereWidthDivisions, sphereHeightDivisions );
+		const sphereMat = new THREE.MeshPhongMaterial( { color: '#CA8' } );
+		const mesh = new THREE.Mesh( sphereGeo, sphereMat );
+		mesh.position.set( - sphereRadius - 1, sphereRadius + 2, 0 );
+		scene.add( mesh );
 
+	}
 
-//Stuff for obj file
-//create init object 
-	const objLoader = new OBJLoader();
-	objLoader.load('./10680_Dog_v2.obj', (object) => {
-	object.scale.set(0.038, 0.038, 0.038); // Adjust the scaling factor (CHATgpt helped me come up with this line of code, I input the numbers by myself)
-	object.position.set(1.7,1.5,0)    //I added the appropriate numbers to get close to the cube
-	scene.add(object);
-    // Apply texture to the material of the 3D dog object (chatgpt helped me come up with the next 4 lines, I learned its a standard way of applying textures to 3d object like this using children)
-	// Similar to this: https://discourse.threejs.org/t/how-to-texture-a-3d-model-in-three-js/25035
-    object.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-            const dogTexture = loader.load('grasslight-big.jpg');
-            child.material.map = dogTexture;
-        }
-    });
-});
+	{
 
+		const color = 0xFFFFFF;
+		const intensity = 3;
+		const light = new THREE.DirectionalLight( color, intensity );
+		light.position.set( 0, 10, 0 );
+		light.target.position.set( - 5, 0, 0 );
+		scene.add( light );
+		scene.add( light.target );
 
+	}
 
-//render shape
-	function render( time ) {
+	function resizeRendererToDisplaySize( renderer ) {
 
-		time *= 0.001; // convert time to seconds
+		const canvas = renderer.domElement;
+		const width = canvas.clientWidth;
+		const height = canvas.clientHeight;
+		const needResize = canvas.width !== width || canvas.height !== height;
+		if ( needResize ) {
 
-		cube.rotation.x = time;
-		cube.rotation.y = time;
+			renderer.setSize( width, height, false );
 
-		sphere.rotation.x = time;
-		sphere.rotation.y = time;
+		}
 
-		tetrahedron.rotation.x = time;
-		tetrahedron.rotation.y = time;
+		return needResize;
+
+	}
+
+	function render() {
+
+		if ( resizeRendererToDisplaySize( renderer ) ) {
+
+			const canvas = renderer.domElement;
+			camera.aspect = canvas.clientWidth / canvas.clientHeight;
+			camera.updateProjectionMatrix();
+
+		}
 
 		renderer.render( scene, camera );
 
 		requestAnimationFrame( render );
 
 	}
-	requestAnimationFrame( render );  //request browser that I need to animate something
+
+	requestAnimationFrame( render );
 
 }
+
 main();
