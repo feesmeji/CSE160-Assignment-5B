@@ -188,46 +188,100 @@ function main() {
 
 
 //Lighting ------------------------------------------------
+//GUI setup:
+
+class ColorGUIHelper {
+	constructor(object, prop) {
+	this.object = object;
+	this.prop = prop;
+	}
+	get value() {
+	return `#${this.object[this.prop].getHexString()}`;
+	}
+	set value(hexString) {
+	this.object[this.prop].set(hexString);
+	}
+}
 
 //Ambient Lighting
 {
-	
 	const color = 0xFFFFFF;
 	const intensity = 1;
 	const light = new THREE.AmbientLight(color, intensity);
 	scene.add(light);
 
-	class ColorGUIHelper {
-		constructor(object, prop) {
-		this.object = object;
-		this.prop = prop;
-		}
-		get value() {
-		return `#${this.object[this.prop].getHexString()}`;
-		}
-		set value(hexString) {
-		this.object[this.prop].set(hexString);
-		}
-	}
-
-	const gui = new GUI();
-	gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
-	gui.add(light, 'intensity', 0, 2, 0.01);
+	const ambientGUI = new GUI();
+	//document.getElementById('ambient-container').appendChild(ambientGUI.domElement); // Append to a container div (chatgpt)
+	ambientGUI.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
+	ambientGUI.add(light, 'intensity', 0, 2, 0.01);
 
 
 }
 
-	// {
-	// 	//Directional Light
-	// 	const color = 0xFFFFFF;
-	// 	const intensity = 3;
-	// 	const light = new THREE.DirectionalLight( color, intensity );
-	// 	light.position.set( 0, 10, 0 );
-	// 	light.target.position.set( - 5, 0, 0 );
-	// 	scene.add( light );
-	// 	scene.add( light.target );
+//Hemisphere Light
+{
+	const skyColor = 0xB1E1FF; // light blue
+	const groundColor = 0xB97A20; // brownish orange
+	const intensity = 1;
+	const light = new THREE.HemisphereLight( skyColor, groundColor, intensity );
+	scene.add( light );
 
-	// }
+	const hemisphereGUI = new GUI();
+    //document.getElementById('hemisphere-container').appendChild(hemisphereGUI.domElement); // Append to a container div (chatgpt)
+	hemisphereGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'skyColor' );
+	hemisphereGUI.addColor( new ColorGUIHelper( light, 'groundColor' ), 'value' ).name( 'groundColor' );
+	hemisphereGUI.add( light, 'intensity', 0, 5, 0.01 );
+
+
+}
+
+// Ambient Light end ----------------------------------
+
+//Directional Light
+
+function makeXYZGUI( gui, vector3, name, onChangeFn ) {
+
+	const folder = gui.addFolder( name );
+	folder.add( vector3, 'x', - 10, 10 ).onChange( onChangeFn );
+	folder.add( vector3, 'y', 0, 10 ).onChange( onChangeFn );
+	folder.add( vector3, 'z', - 10, 10 ).onChange( onChangeFn );
+	folder.open();
+
+}
+
+{
+
+	const color = 0xFFFFFF;
+	const intensity = 1;
+	const light = new THREE.DirectionalLight( color, intensity );
+	light.position.set( 0, 10, 0 );
+	light.target.position.set( - 5, 0, 0 );
+	scene.add( light );
+	scene.add( light.target );
+
+	const helper = new THREE.DirectionalLightHelper( light );
+	scene.add( helper );
+
+	function updateLight() {
+
+		light.target.updateMatrixWorld();
+		helper.update();
+
+	}
+
+	updateLight();
+
+	const directionalGUI = new GUI();
+	//document.getElementById('directional-container').appendChild(directionalGUI.domElement); // Append to a container div
+	directionalGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'color' );
+	directionalGUI.add( light, 'intensity', 0, 5, 0.01 );
+
+	makeXYZGUI( directionalGUI, light.position, 'position', updateLight );
+	makeXYZGUI( directionalGUI, light.target.position, 'target', updateLight );
+
+}
+
+// Directional Light End ---------------------------
 
 	function resizeRendererToDisplaySize( renderer ) {
 
