@@ -61,11 +61,11 @@ function main() {
 
 	}
 
-	const gui = new GUI();
-	gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
-	const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
-	gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'neafr' ).onChange( updateCamera );
-	gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
+	// const gui = new GUI();
+	// gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
+	// const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
+	// gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'neafr' ).onChange( updateCamera );
+	// gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
 
 //Passed the OrbitControls a camera to control
 	const controls = new OrbitControls( camera, canvas );
@@ -186,17 +186,48 @@ function main() {
 	});
 	}
 
-	{
-		//Directional Light
-		const color = 0xFFFFFF;
-		const intensity = 3;
-		const light = new THREE.DirectionalLight( color, intensity );
-		light.position.set( 0, 10, 0 );
-		light.target.position.set( - 5, 0, 0 );
-		scene.add( light );
-		scene.add( light.target );
 
+//Lighting ------------------------------------------------
+
+//Ambient Lighting
+{
+	
+	const color = 0xFFFFFF;
+	const intensity = 1;
+	const light = new THREE.AmbientLight(color, intensity);
+	scene.add(light);
+
+	class ColorGUIHelper {
+		constructor(object, prop) {
+		this.object = object;
+		this.prop = prop;
+		}
+		get value() {
+		return `#${this.object[this.prop].getHexString()}`;
+		}
+		set value(hexString) {
+		this.object[this.prop].set(hexString);
+		}
 	}
+
+	const gui = new GUI();
+	gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
+	gui.add(light, 'intensity', 0, 2, 0.01);
+
+
+}
+
+	// {
+	// 	//Directional Light
+	// 	const color = 0xFFFFFF;
+	// 	const intensity = 3;
+	// 	const light = new THREE.DirectionalLight( color, intensity );
+	// 	light.position.set( 0, 10, 0 );
+	// 	light.target.position.set( - 5, 0, 0 );
+	// 	scene.add( light );
+	// 	scene.add( light.target );
+
+	// }
 
 	function resizeRendererToDisplaySize( renderer ) {
 
