@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import {RectAreaLightUniformsLib} from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import {RectAreaLightHelper} from 'three/addons/helpers/RectAreaLightHelper.js';
 
 //ChatGPT suggested I add this line of code to debug my shapes not spinning 
 let cube, sphere, tetrahedron; // Declare variables at higher scope
@@ -11,18 +13,23 @@ function main() {
 	const canvas = document.querySelector( '#c' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
 
+	function updateLight() {
+
+		light.target.updateMatrixWorld();
+		helper.update();
+	}
 
 // Add sky2block
 {
 
 	const loader = new THREE.CubeTextureLoader();
 	const texture = loader.load([
-		'sky2.png',
-		'sky2.png',
-		'sky2.png',
-		'sky2.png',
-		'sky2.png',
-		'sky2.png',
+		'end_sky.jpg',
+		'end_sky.jpg',
+		'end_sky.jpg',
+		'end_sky.jpg',
+		'end_sky.jpg',
+		'end_sky.jpg',
 
 	] );
 	scene.background = texture;
@@ -109,7 +116,7 @@ function main() {
 
 		//Make Plane geometry. (Default Xy plane), ground (XZ) plane
 		const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
-		const planeMat = new THREE.MeshPhongMaterial( {  //make material for the plane
+		const planeMat = new THREE.MeshStandardMaterial( {  //make material for the plane
 			map: texture,
 			side: THREE.DoubleSide,
 		} );
@@ -124,7 +131,7 @@ function main() {
 		//Light Blue Cube
 		const cubeSize = 4;
 		const cubeGeo = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
-		const cubeMat = new THREE.MeshPhongMaterial( { color: '#8AC' } );
+		const cubeMat = new THREE.MeshStandardMaterial( { color: '#8AC' } );
 		const mesh = new THREE.Mesh( cubeGeo, cubeMat );
 		mesh.position.set( cubeSize + 1, cubeSize / 2, 0 );
 		scene.add( mesh );
@@ -137,7 +144,7 @@ function main() {
 		const sphereWidthDivisions = 32;
 		const sphereHeightDivisions = 16;
 		const sphereGeo = new THREE.SphereGeometry( sphereRadius, sphereWidthDivisions, sphereHeightDivisions );
-		const sphereMat = new THREE.MeshPhongMaterial( { color: '#CA8' } );
+		const sphereMat = new THREE.MeshStandardMaterial( { color: '#CA8' } );
 		const mesh = new THREE.Mesh( sphereGeo, sphereMat );
 		mesh.position.set( - sphereRadius - 4, sphereRadius + 2, 0 );
 		scene.add( mesh );
@@ -154,7 +161,7 @@ function main() {
 		const texture = loader.load( 'rubber_duck.jpg');
 		texture.colorSpace = THREE.SRGBColorSpace;
 
-		const material = new THREE.MeshPhongMaterial( { map: texture} ); // greenish blue hex number
+		const material = new THREE.MeshStandardMaterial( { map: texture} ); // greenish blue hex number
 		cube = new THREE.Mesh( geometry, material );
 		//cube.visible = false
 		cube.position.set(0,3,0);
@@ -164,7 +171,7 @@ function main() {
 	{
 		//3A Sphere
 		const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
-		const sphere_material = new THREE.MeshPhongMaterial( { color: 0xff0000 } ); 
+		const sphere_material = new THREE.MeshStandardMaterial( { color: 0xff0000 } ); 
 		sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
 		sphere.position.set(-10,1,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
@@ -175,7 +182,7 @@ function main() {
 	{
 		//3A Tetrahedron
 		const tetrahedron_geometry = new THREE.TetrahedronGeometry(2, 0);
-		const tetrahedron_material = new THREE.MeshPhongMaterial({color : 0x00FFFF });
+		const tetrahedron_material = new THREE.MeshStandardMaterial({color : 0x00FFFF });
 		tetrahedron = new THREE.Mesh(tetrahedron_geometry, tetrahedron_material);
 
 		tetrahedron.position.set(10, 4 ,0);
@@ -238,23 +245,65 @@ class ColorGUIHelper {
 
 }
 
-//Hemisphere Light
+// RectArea Light
 {
-	const skyColor = 0xB1E1FF; // light blue
-	const groundColor = 0xB97A20; // brownish orange
-	const intensity = 1;
-	const light = new THREE.HemisphereLight( skyColor, groundColor, intensity );
-	scene.add( light );
-	const hemisphereGUI = new GUI();
-    const hemisphereContainer = document.getElementById('hemisphere-container'); // Create a container for hemisphere GUI controls
-    hemisphereContainer.appendChild(hemisphereGUI.domElement); // Append to the hemisphere container
-    //document.getElementById('hemisphere-container').appendChild(hemisphereGUI.domElement); // Append to a container div (chatgpt)
-	hemisphereGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'skyColor' );
-	hemisphereGUI.addColor( new ColorGUIHelper( light, 'groundColor' ), 'value' ).name( 'groundColor' );
-	hemisphereGUI.add( light, 'intensity', 0, 5, 0.01 );
+	class DegRadHelper {
+		constructor(obj, prop) {
+		  this.obj = obj;
+		  this.prop = prop;
+		}
+		get value() {
+		  return THREE.MathUtils.radToDeg(this.obj[this.prop]);
+		}
+		set value(v) {
+		  this.obj[this.prop] = THREE.MathUtils.degToRad(v);
+		}
+	  }
+	
+	RectAreaLightUniformsLib.init();
+	const color = 0xFFFFFF;
+	const intensity = 5;
+	const width = 12;
+	const height = 4;
+	const light = new THREE.RectAreaLight(color, intensity, width, height);
+	light.position.set(0, 10, 0);
+	light.rotation.x = THREE.MathUtils.degToRad(-90);
+	scene.add(light);
+	 
+	const helper = new RectAreaLightHelper(light);
+	light.add(helper);
 
+//GUI
+	// const gui = new GUI();
+	// gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
+	// gui.add(light, 'intensity', 0, 10, 0.01);
+	// gui.add(light, 'width', 0, 20);
+	// gui.add(light, 'height', 0, 20);
+	// gui.add(new DegRadHelper(light.rotation, 'x'), 'value', -180, 180).name('x rotation');
+	// gui.add(new DegRadHelper(light.rotation, 'y'), 'value', -180, 180).name('y rotation');
+	// gui.add(new DegRadHelper(light.rotation, 'z'), 'value', -180, 180).name('z rotation');
+	
+	// makeXYZGUI(gui, light.position, 'position');
 
 }
+
+// //Hemisphere Light
+// {
+// 	const skyColor = 0xB1E1FF; // light blue
+// 	const groundColor = 0xB97A20; // brownish orange
+// 	const intensity = 1;
+// 	const light = new THREE.HemisphereLight( skyColor, groundColor, intensity );
+// 	scene.add( light );
+// 	const hemisphereGUI = new GUI();
+//     const hemisphereContainer = document.getElementById('hemisphere-container'); // Create a container for hemisphere GUI controls
+//     hemisphereContainer.appendChild(hemisphereGUI.domElement); // Append to the hemisphere container
+//     //document.getElementById('hemisphere-container').appendChild(hemisphereGUI.domElement); // Append to a container div (chatgpt)
+// 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'skyColor' );
+// 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'groundColor' ), 'value' ).name( 'groundColor' );
+// 	hemisphereGUI.add( light, 'intensity', 0, 5, 0.01 );
+
+
+// }
 
 
 //Directional Light
@@ -347,6 +396,7 @@ function makeXYZGUI( gui, vector3, name, onChangeFn ) {
 	}
 
 	requestAnimationFrame( render );
+
 
 }
 
