@@ -93,32 +93,32 @@ function main() {
 
 
 // Floor 
-	// {
-	// 	//Load checkerboard texture, 
-	//  const planeSize = 40;
+	{
+		//Load checkerboard texture, 
+	 const planeSize = 40;
 
-	// 	const loader = new THREE.TextureLoader();
-	// 	const texture = loader.load( 'checker.png' );
-	// 	texture.wrapS = THREE.RepeatWrapping;   //repeat the texture 
-	// 	texture.wrapT = THREE.RepeatWrapping;   //repeat the texture
-	// 	texture.magFilter = THREE.NearestFilter;   //set filtering to nearest.
-	// 	//texture.colorSpace = THREE.SRGBColorSpace;
-	// 	const repeats = planeSize / 2;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
-	// 	texture.repeat.set( repeats, repeats );
+		const loader = new THREE.TextureLoader();
+		const texture = loader.load( 'checker.png' );
+		texture.wrapS = THREE.RepeatWrapping;   //repeat the texture 
+		texture.wrapT = THREE.RepeatWrapping;   //repeat the texture
+		texture.magFilter = THREE.NearestFilter;   //set filtering to nearest.
+		//texture.colorSpace = THREE.SRGBColorSpace;
+		const repeats = planeSize / 2;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
+		texture.repeat.set( repeats, repeats );
 
 
-	// 	//Make Plane geometry. (Default Xy plane), ground (XZ) plane
-	// 	const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
-	// 	const planeMat = new THREE.MeshPhongMaterial( {  //make material for the plane
-	// 		map: texture,
-	// 		side: THREE.DoubleSide,
-	// 	} );
-	// 	//Create a mesh to insert it in the scene.
-	// 	const mesh = new THREE.Mesh( planeGeo, planeMat );
-	// 	mesh.rotation.x = Math.PI * - .5;
-	// 	scene.add( mesh );
+		//Make Plane geometry. (Default Xy plane), ground (XZ) plane
+		const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
+		const planeMat = new THREE.MeshPhongMaterial( {  //make material for the plane
+			map: texture,
+			side: THREE.DoubleSide,
+		} );
+		//Create a mesh to insert it in the scene.
+		const mesh = new THREE.Mesh( planeGeo, planeMat );
+		mesh.rotation.x = Math.PI * - .5;
+		scene.add( mesh );
 
-	// }
+	}
 
 	{
 		//Light Blue Cube
