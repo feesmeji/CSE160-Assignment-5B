@@ -13,6 +13,21 @@
     <p>Notes to grader: Most code based off of threejs.org guides that were linked on assignment 5.B instructions. ChatGPT sometimes helped me debug and get unstuck with my code, and I made comments in my code indicating where it was used. Also recieved help from a course tutor.
     </p>
     <canvas id="c" height="600" width="600"></canvas>
+
+    <style>
+        .control-container {
+            position: absolute; /* or relative, fixed, etc. depending on your needs */
+            top: 20px; /* adjust top position */
+            left: 20px; /* adjust left position */
+        }
+    </style>
+
+    <!-- Add containers for GUI controls , Provided by chatgpt to fix overlapping lighting controls-->
+    <div id="ambient-container"></div>
+    <div id="hemisphere-container"></div>
+    <div id="directional-container"></div>
+
+
     <script type="importmap">
         {
             "imports":{

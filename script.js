@@ -7,9 +7,27 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 let cube, sphere, tetrahedron; // Declare variables at higher scope
 
 function main() {
-
+	const scene = new THREE.Scene();
 	const canvas = document.querySelector( '#c' );
 	const renderer = new THREE.WebGLRenderer( { antialias: true, canvas } );
+
+
+// Add sky2block
+{
+
+	const loader = new THREE.CubeTextureLoader();
+	const texture = loader.load([
+		'sky2.png',
+		'sky2.png',
+		'sky2.png',
+		'sky2.png',
+		'sky2.png',
+		'sky2.png',
+
+	] );
+	scene.background = texture;
+
+}
 
 //Camera Setup
 //Update from last time
@@ -71,36 +89,36 @@ function main() {
 	const controls = new OrbitControls( camera, canvas );
 	controls.target.set( 0, 5, 0 ); //orbit around 5 units above the origin and call control.update.
 	controls.update();
-
-	const scene = new THREE.Scene();
-	scene.background = new THREE.Color( 'black' );
-
-	{
-		//Load checkerboard texture, 
-		const planeSize = 40;
-
-		const loader = new THREE.TextureLoader();
-		const texture = loader.load( 'checker.png' );
-		texture.wrapS = THREE.RepeatWrapping;   //repeat the texture 
-		texture.wrapT = THREE.RepeatWrapping;   //repeat the texture
-		texture.magFilter = THREE.NearestFilter;   //set filtering to nearest.
-		//texture.colorSpace = THREE.SRGBColorSpace;
-		const repeats = planeSize / 2;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
-		texture.repeat.set( repeats, repeats );
+	// /scene.background = new THREE.Color( 'black' );
 
 
-		//Make Plane geometry. (Default Xy plane), ground (XZ) plane
-		const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
-		const planeMat = new THREE.MeshPhongMaterial( {  //make material for the plane
-			map: texture,
-			side: THREE.DoubleSide,
-		} );
-		//Create a mesh to insert it in the scene.
-		const mesh = new THREE.Mesh( planeGeo, planeMat );
-		mesh.rotation.x = Math.PI * - .5;
-		scene.add( mesh );
+// Floor 
+	// {
+	// 	//Load checkerboard texture, 
+	//  const planeSize = 40;
 
-	}
+	// 	const loader = new THREE.TextureLoader();
+	// 	const texture = loader.load( 'checker.png' );
+	// 	texture.wrapS = THREE.RepeatWrapping;   //repeat the texture 
+	// 	texture.wrapT = THREE.RepeatWrapping;   //repeat the texture
+	// 	texture.magFilter = THREE.NearestFilter;   //set filtering to nearest.
+	// 	//texture.colorSpace = THREE.SRGBColorSpace;
+	// 	const repeats = planeSize / 2;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
+	// 	texture.repeat.set( repeats, repeats );
+
+
+	// 	//Make Plane geometry. (Default Xy plane), ground (XZ) plane
+	// 	const planeGeo = new THREE.PlaneGeometry( planeSize, planeSize );
+	// 	const planeMat = new THREE.MeshPhongMaterial( {  //make material for the plane
+	// 		map: texture,
+	// 		side: THREE.DoubleSide,
+	// 	} );
+	// 	//Create a mesh to insert it in the scene.
+	// 	const mesh = new THREE.Mesh( planeGeo, planeMat );
+	// 	mesh.rotation.x = Math.PI * - .5;
+	// 	scene.add( mesh );
+
+	// }
 
 	{
 		//Light Blue Cube
@@ -211,6 +229,8 @@ class ColorGUIHelper {
 	scene.add(light);
 
 	const ambientGUI = new GUI();
+	const ambientContainer = document.getElementById('ambient-container'); // Create a container for ambient GUI controls
+	ambientContainer.appendChild(ambientGUI.domElement); // Append to the ambient container
 	//document.getElementById('ambient-container').appendChild(ambientGUI.domElement); // Append to a container div (chatgpt)
 	ambientGUI.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
 	ambientGUI.add(light, 'intensity', 0, 2, 0.01);
@@ -225,8 +245,9 @@ class ColorGUIHelper {
 	const intensity = 1;
 	const light = new THREE.HemisphereLight( skyColor, groundColor, intensity );
 	scene.add( light );
-
 	const hemisphereGUI = new GUI();
+    const hemisphereContainer = document.getElementById('hemisphere-container'); // Create a container for hemisphere GUI controls
+    hemisphereContainer.appendChild(hemisphereGUI.domElement); // Append to the hemisphere container
     //document.getElementById('hemisphere-container').appendChild(hemisphereGUI.domElement); // Append to a container div (chatgpt)
 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'skyColor' );
 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'groundColor' ), 'value' ).name( 'groundColor' );
@@ -235,7 +256,6 @@ class ColorGUIHelper {
 
 }
 
-// Ambient Light end ----------------------------------
 
 //Directional Light
 
@@ -272,6 +292,8 @@ function makeXYZGUI( gui, vector3, name, onChangeFn ) {
 	updateLight();
 
 	const directionalGUI = new GUI();
+    const directionalContainer = document.getElementById('directional-container'); // Create a container for directional GUI controls
+    directionalContainer.appendChild(directionalGUI.domElement); // Append to the directional container
 	//document.getElementById('directional-container').appendChild(directionalGUI.domElement); // Append to a container div
 	directionalGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'color' );
 	directionalGUI.add( light, 'intensity', 0, 5, 0.01 );
