@@ -101,16 +101,16 @@ function main() {
 
 // Floor 
 	{
-		//Load checkerboard texture, 
-	 const planeSize = 40;
+		//Load grass texture, 
+	 const planeSize = 40;    //size of the floor.
 
 		const loader = new THREE.TextureLoader();
-		const texture = loader.load( 'checker.png' );
+		const texture = loader.load( 'grasslight-big.jpg' );
 		texture.wrapS = THREE.RepeatWrapping;   //repeat the texture 
 		texture.wrapT = THREE.RepeatWrapping;   //repeat the texture
 		texture.magFilter = THREE.NearestFilter;   //set filtering to nearest.
 		//texture.colorSpace = THREE.SRGBColorSpace;
-		const repeats = planeSize / 2;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
+		const repeats = planeSize / 20;  //"Since the texture is a 2x2 pixel checkerboard, by repeating and setting the repeat to half the size of the plane each check on the checkerboard will be exactly 1 unit large"
 		texture.repeat.set( repeats, repeats );
 
 
@@ -193,11 +193,14 @@ function main() {
 	{
 	//3A Dog Obj File
 	//Stuff for obj file
-	//create init object 
+	//create init object
 	const objLoader = new OBJLoader();
-	objLoader.load('./10680_Dog_v2.obj', (object) => {
+	objLoader.load('./new_dog.obj', (object) => {
+	object.rotation.set(-89.55,0,0);
 	object.scale.set(0.1, 0.1, 0.1); // Adjust the scaling factor (CHATgpt helped me come up with this line of code, I input the numbers by myself)
-	object.position.set(-10,1.5,-5)    //I added the appropriate numbers to get close to the cube
+	object.position.set(-10,1.7,-5);    //I added the appropriate numbers to get close to the cube
+
+	
 	scene.add(object);
 	// Apply texture to the material of the 3D dog object (chatgpt helped me come up with the next 4 lines, I learned its a standard way of applying textures to 3d object like this using children)
 	// Similar to this: https://discourse.threejs.org/t/how-to-texture-a-3d-model-in-three-js/25035
@@ -274,16 +277,16 @@ class ColorGUIHelper {
 	light.add(helper);
 
 //GUI
-	// const gui = new GUI();
-	// gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
-	// gui.add(light, 'intensity', 0, 10, 0.01);
-	// gui.add(light, 'width', 0, 20);
-	// gui.add(light, 'height', 0, 20);
-	// gui.add(new DegRadHelper(light.rotation, 'x'), 'value', -180, 180).name('x rotation');
-	// gui.add(new DegRadHelper(light.rotation, 'y'), 'value', -180, 180).name('y rotation');
-	// gui.add(new DegRadHelper(light.rotation, 'z'), 'value', -180, 180).name('z rotation');
+	const gui = new GUI();
+	gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
+	gui.add(light, 'intensity', 0, 10, 0.01);
+	gui.add(light, 'width', 0, 20);
+	gui.add(light, 'height', 0, 20);
+	gui.add(new DegRadHelper(light.rotation, 'x'), 'value', -180, 180).name('x rotation');
+	gui.add(new DegRadHelper(light.rotation, 'y'), 'value', -180, 180).name('y rotation');
+	gui.add(new DegRadHelper(light.rotation, 'z'), 'value', -180, 180).name('z rotation');
 	
-	// makeXYZGUI(gui, light.position, 'position');
+	makeXYZGUI(gui, light.position, 'position');
 
 }
 
