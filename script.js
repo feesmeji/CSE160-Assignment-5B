@@ -102,7 +102,7 @@ function main() {
 // Floor 
 	{
 		//Load grass texture, 
-	 const planeSize = 40;    //size of the floor.
+	 const planeSize = 60;    //size of the floor.
 
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load( 'grasslight-big.jpg' );
@@ -195,10 +195,10 @@ function main() {
 	//Stuff for obj file
 	//create init object
 	const objLoader = new OBJLoader();
-	objLoader.load('./new_dog.obj', (object) => {
-	object.rotation.set(-89.55,0,0);
-	object.scale.set(0.1, 0.1, 0.1); // Adjust the scaling factor (CHATgpt helped me come up with this line of code, I input the numbers by myself)
-	object.position.set(-10,1.7,-5);    //I added the appropriate numbers to get close to the cube
+	objLoader.load('./white_dog.obj', (object) => {
+	//object.rotation.set(0,60,0);
+	object.scale.set(0.5, 0.5, 0.5); // Adjust the scaling factor (CHATgpt helped me come up with this line of code, I input the numbers by myself)
+	object.position.set(0,-0.1,-15);    //I added the appropriate numbers to get close to the cube
 
 	
 	scene.add(object);
@@ -207,7 +207,7 @@ function main() {
 	object.traverse((child) => {
 		if (child instanceof THREE.Mesh) {
 			const loader = new THREE.TextureLoader();
-			const dogTexture = loader.load('grasslight-big.jpg');
+			const dogTexture = loader.load('white_dog_texture.png');
 			child.material.map = dogTexture;
 		}
 	});
@@ -289,24 +289,6 @@ class ColorGUIHelper {
 	makeXYZGUI(gui, light.position, 'position');
 
 }
-
-// //Hemisphere Light
-// {
-// 	const skyColor = 0xB1E1FF; // light blue
-// 	const groundColor = 0xB97A20; // brownish orange
-// 	const intensity = 1;
-// 	const light = new THREE.HemisphereLight( skyColor, groundColor, intensity );
-// 	scene.add( light );
-// 	const hemisphereGUI = new GUI();
-//     const hemisphereContainer = document.getElementById('hemisphere-container'); // Create a container for hemisphere GUI controls
-//     hemisphereContainer.appendChild(hemisphereGUI.domElement); // Append to the hemisphere container
-//     //document.getElementById('hemisphere-container').appendChild(hemisphereGUI.domElement); // Append to a container div (chatgpt)
-// 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'color' ), 'value' ).name( 'skyColor' );
-// 	hemisphereGUI.addColor( new ColorGUIHelper( light, 'groundColor' ), 'value' ).name( 'groundColor' );
-// 	hemisphereGUI.add( light, 'intensity', 0, 5, 0.01 );
-
-
-// }
 
 
 //Directional Light
