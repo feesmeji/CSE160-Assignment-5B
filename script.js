@@ -102,7 +102,7 @@ function main() {
 // Floor 
 	{
 		//Load grass texture, 
-	 const planeSize = 60;    //size of the floor.
+	 const planeSize = 80;    //size of the floor.
 
 		const loader = new THREE.TextureLoader();
 		const texture = loader.load( 'grasslight-big.jpg' );
@@ -127,34 +127,142 @@ function main() {
 
 	}
 
+
+//White bone
+
 	{
-		//Light Blue Cube
-		const cubeSize = 4;
-		const cubeGeo = new THREE.BoxGeometry( cubeSize, cubeSize, cubeSize );
-		const cubeMat = new THREE.MeshStandardMaterial( { color: '#8AC' } );
+		//White rectangle
+		const cubeGeo = new THREE.BoxGeometry( 4, 0.3, 0.6);
+		const cubeMat = new THREE.MeshStandardMaterial( { color: '#ffffff' } );
 		const mesh = new THREE.Mesh( cubeGeo, cubeMat );
-		mesh.position.set( cubeSize + 1, cubeSize / 2, 0 );
+		mesh.position.set( 7, 0.7, 0 );
 		scene.add( mesh );
 
 	}
 
 	{
-		//Tan Sphere
-		const sphereRadius = 3;
+		//left sphere
+		//3A Sphere (red)
+		const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
+		const sphere_material = new THREE.MeshStandardMaterial( { color: '#ffffff' } ); 
+		sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+		sphere.position.set(5,0.7,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+		scene.add( sphere );
+
+	}
+
+	{
+		//Right sphere
+		const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
+		const sphere_material = new THREE.MeshStandardMaterial( { color: '#ffffff' } ); 
+		sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+		sphere.position.set(9,0.7,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+		scene.add( sphere );
+	}
+
+
+
+// White bone ends
+
+
+//Blue Bone
+
+{
+	//White rectangle
+	const cubeGeo = new THREE.BoxGeometry( 4, 0.3, 0.6);
+	const cubeMat = new THREE.MeshStandardMaterial( { color: '#0000FF' } );
+	const mesh = new THREE.Mesh( cubeGeo, cubeMat );
+	mesh.position.set( 0, 0.7, -11 );
+	scene.add( mesh );
+
+}
+
+{
+	//left sphere
+	//3A Sphere (red)
+	const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
+	const sphere_material = new THREE.MeshStandardMaterial( { color: '#0000FF' } ); 
+	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+	sphere.position.set(2,0.7,-11);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+	scene.add( sphere );
+
+}
+
+{
+	//Right sphere
+	const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
+	const sphere_material = new THREE.MeshStandardMaterial( { color: '#0000FF' } ); 
+	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+	sphere.position.set(-2,0.7,-11);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+	scene.add( sphere );
+}
+
+//Blue bone ends
+
+
+
+//Bone in mouth
+
+{
+	//White rectangle
+	const cubeGeo = new THREE.BoxGeometry( 4, 0.2, 0.4);
+	const cubeMat = new THREE.MeshStandardMaterial( { color: '#ffffff' } );
+	const mesh = new THREE.Mesh( cubeGeo, cubeMat );
+	mesh.position.set( 0, 3, -12 );
+	scene.add( mesh );
+
+}
+
+{
+	//left sphere
+	const sphere_geometry = new THREE.SphereGeometry( 0.4, 32, 16 ); 
+	const sphere_material = new THREE.MeshStandardMaterial( { color: '#ff0000' } ); 
+	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+	sphere.position.set(2,3,-12);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+	scene.add( sphere );
+
+}
+
+{
+	//Right sphere
+	const sphere_geometry = new THREE.SphereGeometry( 0.4, 32, 16 ); 
+	const sphere_material = new THREE.MeshStandardMaterial( { color: '#ff0000' } ); 
+	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
+
+	sphere.position.set(-2,3,-12);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+
+	scene.add( sphere );
+}
+
+//Bone in mouth ends
+
+	{
+		//Green Sphere
+		const sphereRadius = 0.7;
 		const sphereWidthDivisions = 32;
 		const sphereHeightDivisions = 16;
 		const sphereGeo = new THREE.SphereGeometry( sphereRadius, sphereWidthDivisions, sphereHeightDivisions );
-		const sphereMat = new THREE.MeshStandardMaterial( { color: '#CA8' } );
+		const sphereMat = new THREE.MeshStandardMaterial( { color: '#00FF00' } );
 		const mesh = new THREE.Mesh( sphereGeo, sphereMat );
-		mesh.position.set( - sphereRadius - 4, sphereRadius + 2, 0 );
+		mesh.position.set(-6, 0.8, -5 );
 		scene.add( mesh );
 
 	}
 	{
-		//3A cube:
-		const boxWidth = 4;
-		const boxHeight = 4;
-		const boxDepth = 4;
+		//3A cube (duck):
+		const boxWidth = 2;
+		const boxHeight = 2;
+		const boxDepth = 2;
 		const geometry = new THREE.BoxGeometry( boxWidth, boxHeight, boxDepth );
 
 		const loader = new THREE.TextureLoader();
@@ -164,30 +272,124 @@ function main() {
 		const material = new THREE.MeshStandardMaterial( { map: texture} ); // greenish blue hex number
 		cube = new THREE.Mesh( geometry, material );
 		//cube.visible = false
-		cube.position.set(0,3,0);
+		cube.position.set(0,1.5,0);
 		scene.add( cube );
 	}
 
 	{
-		//3A Sphere
+		//3A Sphere (red)
 		const sphere_geometry = new THREE.SphereGeometry( 0.7, 32, 16 ); 
 		const sphere_material = new THREE.MeshStandardMaterial( { color: 0xff0000 } ); 
 		sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
-		sphere.position.set(-10,1,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+		sphere.position.set(-10,0.8,0);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
 
 		scene.add( sphere );
 	}
 
+
+// DOG PARK OBSTACLES
+
+//Cylinders
+
 	{
-		//3A Tetrahedron
-		const tetrahedron_geometry = new THREE.TetrahedronGeometry(2, 0);
-		const tetrahedron_material = new THREE.MeshStandardMaterial({color : 0x00FFFF });
-		tetrahedron = new THREE.Mesh(tetrahedron_geometry, tetrahedron_material);
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
+	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
+	cylinder.rotation.set(Math.PI/2,0,0)   //CHATGPT helped me determine and use MATH.PI/2 to rotate to make various shapes in my code lay flat on my floor. I first found out how to use it here then I used Math.PI/2 elsewhere
+	cylinder.scale.set(0.3,0.3,0.3)
+	cylinder.position.set(-6,0,-15)
+	}
 
-		tetrahedron.position.set(10, 4 ,0);
 
-		scene.add(tetrahedron);
+	{
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
+	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
+	cylinder.rotation.set(Math.PI/2,0,0)
+	cylinder.scale.set(0.3,0.3,0.3)
+	cylinder.position.set(-11,0,-15)
+	}
+
+
+	{
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
+	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
+	cylinder.rotation.set(Math.PI/2,0,0)
+	cylinder.scale.set(0.3,0.3,0.3)
+	cylinder.position.set(-16,0,-15)
+	}
+
+	{
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
+	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
+	cylinder.rotation.set(Math.PI/2,0,0)
+	cylinder.scale.set(0.3,0.3,0.3)
+	cylinder.position.set(-21,0,-15)
+	}
+
+//Yellow Ring
+	{
+	const geometry = new THREE.TorusGeometry( 10, 1, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	torus.rotation.set(0,Math.PI/2,0)
+	torus.scale.set(0.4,0.4,0.4);
+	torus.position.set(-23, 4.4,-15)
+	}
+
+//Rings next to eachother:
+	{
+	const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	//torus.rotation.set(0,Math.PI/2,0)
+	torus.scale.set(0.2,0.2,0.2);
+	torus.position.set(26, 2.6,-15)
+	}
+
+	{
+	const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	//torus.rotation.set(0,Math.PI/2,0)
+	torus.scale.set(0.2,0.2,0.2);
+	torus.position.set(26, 2.6,-13)
+	}
+
+
+	{
+	const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	//torus.rotation.set(0,Math.PI/2,0)
+	torus.scale.set(0.2,0.2,0.2);
+	torus.position.set(26, 2.6,-11)
+	}
+
+
+	{
+	const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	//torus.rotation.set(0,Math.PI/2,0)
+	torus.scale.set(0.2,0.2,0.2);
+	torus.position.set(26, 2.6,-9)
+	}
+
+
+// DOG PARK OBSTACLES END
+
+//Pink donut
+	{
+	const geometry = new THREE.TorusGeometry( 10, 3, 16, 100 ); 
+	const material = new THREE.MeshBasicMaterial( { color: 0xFFC0CB} ); 
+	const torus = new THREE.Mesh( geometry, material ); scene.add( torus );
+	torus.rotation.set(Math.PI/2,0,0)
+	torus.scale.set(0.1,0.1,0.1);
+	torus.position.set(12,0.3,-7);
 	}
 
 	{
@@ -369,11 +571,11 @@ function makeXYZGUI( gui, vector3, name, onChangeFn ) {
 		cube.rotation.x = time;
 		cube.rotation.y = time;
 
-		sphere.rotation.x = time;
-		sphere.rotation.y = time;
+		// sphere.rotation.x = time;
+		// sphere.rotation.y = time;
 
-		tetrahedron.rotation.x = time;
-		tetrahedron.rotation.y = time;
+		// tetrahedron.rotation.x = time;
+		// tetrahedron.rotation.y = time;
 		renderer.render( scene, camera );
 
 		requestAnimationFrame( render );
