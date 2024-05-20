@@ -293,7 +293,7 @@ function main() {
 //Cylinders
 
 	{
-	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, ); 
 	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
 	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
 	cylinder.rotation.set(Math.PI/2,0,0)   //CHATGPT helped me determine and use MATH.PI/2 to rotate to make various shapes in my code lay flat on my floor. I first found out how to use it here then I used Math.PI/2 elsewhere
@@ -303,7 +303,7 @@ function main() {
 
 
 	{
-	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32,); 
 	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
 	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
 	cylinder.rotation.set(Math.PI/2,0,0)
@@ -313,7 +313,7 @@ function main() {
 
 
 	{
-	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32,); 
 	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
 	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
 	cylinder.rotation.set(Math.PI/2,0,0)
@@ -322,7 +322,7 @@ function main() {
 	}
 
 	{
-	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32, 1, false ); 
+	const geometry = new THREE.CylinderGeometry( 5, 5, 20, 32 ); 
 	const material = new THREE.MeshBasicMaterial( {color: 0x808080} ); 
 	const cylinder = new THREE.Mesh( geometry, material ); scene.add( cylinder );
 	cylinder.rotation.set(Math.PI/2,0,0)
