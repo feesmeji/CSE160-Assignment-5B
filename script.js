@@ -86,11 +86,6 @@ function main() {
 
 	}
 
-	// const gui = new GUI();
-	// gui.add( camera, 'fov', 1, 180 ).onChange( updateCamera );
-	// const minMaxGUIHelper = new MinMaxGUIHelper( camera, 'near', 'far', 0.1 );
-	// gui.add( minMaxGUIHelper, 'min', 0.1, 50, 0.1 ).name( 'neafr' ).onChange( updateCamera );
-	// gui.add( minMaxGUIHelper, 'max', 0.1, 50, 0.1 ).name( 'far' ).onChange( updateCamera );
 
 //Passed the OrbitControls a camera to control
 	const controls = new OrbitControls( camera, canvas );
@@ -188,7 +183,7 @@ function main() {
 	const sphere_material = new THREE.MeshStandardMaterial( { color: '#0000FF' } ); 
 	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
-	sphere.position.set(2,0.7,-11);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+	sphere.position.set(2,0.7,-11);  
 
 	scene.add( sphere );
 
@@ -200,7 +195,7 @@ function main() {
 	const sphere_material = new THREE.MeshStandardMaterial( { color: '#0000FF' } ); 
 	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
-	sphere.position.set(-2,0.7,-11);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+	sphere.position.set(-2,0.7,-11);  
 
 	scene.add( sphere );
 }
@@ -227,7 +222,7 @@ function main() {
 	const sphere_material = new THREE.MeshStandardMaterial( { color: '#ff0000' } ); 
 	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
-	sphere.position.set(2,3,-12);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+	sphere.position.set(2,3,-12);  
 
 	scene.add( sphere );
 
@@ -239,7 +234,7 @@ function main() {
 	const sphere_material = new THREE.MeshStandardMaterial( { color: '#ff0000' } ); 
 	sphere = new THREE.Mesh( sphere_geometry, sphere_material ); 
 
-	sphere.position.set(-2,3,-12);  //chatgpt suggested I use this function to set the position on the screen, I put the values on my own
+	sphere.position.set(-2,3,-12);  
 
 	scene.add( sphere );
 }
@@ -440,6 +435,7 @@ class ColorGUIHelper {
 	const light = new THREE.AmbientLight(color, intensity);
 	scene.add(light);
 
+	// I believe these lines of code I got help from chat gpt to try and fix the lighting controls, but nothing worked.
 	const ambientGUI = new GUI();
 	const ambientContainer = document.getElementById('ambient-container'); // Create a container for ambient GUI controls
 	ambientContainer.appendChild(ambientGUI.domElement); // Append to the ambient container
@@ -478,7 +474,7 @@ class ColorGUIHelper {
 	const helper = new RectAreaLightHelper(light);
 	light.add(helper);
 
-//GUI
+//GUI (This was ChatGPT attempting to help me fix lighting controls)
 	const gui = new GUI();
 	gui.addColor(new ColorGUIHelper(light, 'color'), 'value').name('color');
 	gui.add(light, 'intensity', 0, 10, 0.01);
@@ -494,7 +490,7 @@ class ColorGUIHelper {
 
 
 //Directional Light
-
+// I believe some of these lines of code I got help from chat gpt to try and fix the lighting controls, but nothing worked.
 function makeXYZGUI( gui, vector3, name, onChangeFn ) {
 
 	const folder = gui.addFolder( name );
@@ -527,6 +523,7 @@ function makeXYZGUI( gui, vector3, name, onChangeFn ) {
 
 	updateLight();
 
+// I believe some of these lines of code I got help from chat gpt to try and fix the lighting controls, but nothing worked.
 	const directionalGUI = new GUI();
     const directionalContainer = document.getElementById('directional-container'); // Create a container for directional GUI controls
     directionalContainer.appendChild(directionalGUI.domElement); // Append to the directional container
